@@ -11,10 +11,9 @@ class TemplateSeeder extends Seeder
     {
         $templates = [
             [
-                'title' => 'Modern',
-                'description' => 'A modern template',
-                'icon' => 'modern-icon',
-                'view' => 'modern',
+                'title' => 'Standard',
+                'description' => 'Standard template',
+                'view' => 'standard',
             ],
         ];
 

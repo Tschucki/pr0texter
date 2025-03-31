@@ -27,14 +27,14 @@ const props = defineProps({
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
-    {
+ /*   {
         title: 'Neuen Post erstellen',
         href: '/'
     },
     {
         title: 'Template auswählen',
         href: '/'
-    },
+    },*/
     {
         title: 'Template ' + props.template.title,
         href: (usePage().props as any).ziggy.location.location
@@ -176,6 +176,13 @@ onBeforeUnmount(() => {
                              class="max-w-[1052px] w-full h-full object-cover" />
                     </div>
                 </div>
+            </div>
+            <div
+                class="relative p-4 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border space-y-4">
+                <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    Ein neuer pr0texter für das pr0gramm
+                </h1>
+                <div class="justify-center flex flex-col items-center"></div>
             </div>
         </div>
     </AppLayout>
