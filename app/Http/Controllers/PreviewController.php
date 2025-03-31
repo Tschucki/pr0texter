@@ -12,9 +12,9 @@ class PreviewController extends Controller
 {
     public function __invoke(Template $template, PreviewRequest $request)
     {
-        $imagePath = Storage::disk('local')->path(Str::uuid()->toString().'.png');
+        $imagePath = Storage::disk('local')->path(Str::uuid()->toString() . '.png');
 
-        Browsershot::html(view('templates/'.$template->view, [
+        Browsershot::html(view('templates/' . $template->view, [
             'content' => $request->tipTapContent,
         ])->render())
             ->noSandbox()
@@ -25,6 +25,14 @@ class PreviewController extends Controller
             ->setNpmBinary(config('binaries.npm'))
             ->save($imagePath);
 
-        return response()->download($imagePath)->deleteFileAfterSend(true);
+        return response()
+            ->download($imagePath,
+                headers: [
+                    'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                    'Pragma' => 'no-cache',
+                    'Expires' => 0,
+                ]
+            )
+            ->deleteFileAfterSend(true);
     }
 }
