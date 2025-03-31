@@ -90,3 +90,59 @@ html {
         @apply bg-background text-foreground;
     }
 }
+
+
+.ProseMirror .resize-handle {
+    position: absolute;
+    background-color: #0ea5e9;
+    border: 1px solid white;
+    border-radius: 2px;
+    width: 6px;
+    height: 6px;
+}
+
+.ProseMirror .resize-handle.tl,
+.ProseMirror .resize-handle.br {
+    cursor: nwse-resize;
+}
+
+.ProseMirror .resize-handle.tr,
+.ProseMirror .resize-handle.bl {
+    cursor: nesw-resize;
+}
+
+.ProseMirror .resize-handle.tl {
+    top: -6px;
+    left: -6px;
+}
+
+.ProseMirror .resize-handle.tr {
+    top: -6px;
+    right: -6px;
+}
+
+.ProseMirror .resize-handle.bl {
+    bottom: -6px;
+    left: -6px;
+}
+
+.ProseMirror .resize-handle.br {
+    bottom: -6px;
+    right: -6px;
+}
+
+.ProseMirror img {
+    position: relative;
+    max-width: 100%;
+    height: auto;
+    transition: all 0.1s ease;
+}
+
+.ProseMirror img.ProseMirror-selectednode {
+    outline: 2px solid #0ea5e9;
+}
+
+.ProseMirror .image-container {
+    position: relative;
+    display: inline-block;
+}

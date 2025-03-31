@@ -33,7 +33,13 @@
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Inter:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Montserrat:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Futura:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Courier New:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Georgia:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Times New Roman:400,500,600" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family=Verdana:400,500,600" rel="stylesheet" />
 
         @routes
         @vite(['resources/js/app.ts'])

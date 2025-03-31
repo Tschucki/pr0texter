@@ -10,8 +10,8 @@ import AppLogo from './AppLogo.vue';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
-        href: '/dashboard',
+        title: 'Templates',
+        href: '/',
         icon: LayoutGrid,
     },
 ];
@@ -50,7 +50,7 @@ const footerNavItems: NavItem[] = [
 
         <SidebarFooter>
             <NavFooter :items="footerNavItems" />
-            <NavUser />
+<!--            <NavUser />-->
         </SidebarFooter>
     </Sidebar>
     <slot />

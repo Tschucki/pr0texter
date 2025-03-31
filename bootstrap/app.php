@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\DeleteOldImagesCommand;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use Illuminate\Foundation\Application;
@@ -21,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
         ]);
+    })
+    ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
+        $schedule->command(DeleteOldImagesCommand::class)->hourly();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
