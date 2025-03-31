@@ -114,17 +114,23 @@ const getPreview = () => {
     }
 };
 
+const storageKey = ref(`editor_content_${props.template.slug}`);
 
-// watch form values and make a post request to the server
 watch(form.values, () => {
     throttledGetPreview();
 });
 
-watch(editorContent, () => {
+watch(editorContent, (newContent) => {
+    localStorage.setItem(storageKey.value, newContent);
     throttledGetPreview();
 });
 
 onMounted(() => {
+    throttledGetPreview();
+    const savedContent = localStorage.getItem(storageKey.value);
+    if (savedContent) {
+        editorContent.value = savedContent;
+    }
     throttledGetPreview();
 });
 
