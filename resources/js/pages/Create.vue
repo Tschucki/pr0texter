@@ -49,7 +49,7 @@ const fileSize = ref('');
 
 
 const formSchema = toTypedSchema(z.object({
-    content: z.string().min(0).max(5000).nullish().nullable().default('')
+    content: z.string().min(0).nullish().nullable().default('')
 }));
 
 const form = useForm({
