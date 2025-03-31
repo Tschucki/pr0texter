@@ -17,6 +17,7 @@ class PreviewController extends Controller
         Browsershot::html(view('templates/'.$template->view, [
             'content' => $request->tipTapContent,
         ])->render())
+            ->noSandbox()
             ->deviceScaleFactor(3) // 3 is max
             ->fullPage()
             ->windowSize(1043, 0)
