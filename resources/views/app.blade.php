@@ -40,7 +40,7 @@
         <link href="https://fonts.bunny.net/css?family=Georgia:400,500,600" rel="stylesheet" />
         <link href="https://fonts.bunny.net/css?family=Times New Roman:400,500,600" rel="stylesheet" />
         <link href="https://fonts.bunny.net/css?family=Verdana:400,500,600" rel="stylesheet" />
-
+        <script defer data-domain="pr0texter.pimmelmannjones.com" src="https://plausible.marcelwagner.dev/js/script.js"></script>
         @routes
         @vite(['resources/js/app.ts'])
         @inertiaHead
