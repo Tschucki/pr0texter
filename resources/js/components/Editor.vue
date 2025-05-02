@@ -95,11 +95,11 @@ const colorOptions = [
 ];
 
 const fontSizeOptions = [
-    { name: 'Klein', value: '12px' },
-    { name: 'Normal', value: '16px' },
-    { name: 'Groß', value: '24px' },
-    { name: 'Sehr groß', value: '28px' },
-    { name: 'Riesig', value: '32px' }
+    { name: 'Klein', value: '1rem' },
+    { name: 'Normal', value: '2rem' },
+    { name: 'Groß', value: '4rem' },
+    { name: 'Sehr groß', value: '6rem' },
+    { name: 'Riesig', value: '8rem' }
 ];
 
 const fontFamilyOptions = [
@@ -339,7 +339,7 @@ function setFontFamily(family: string) {
                                 @click="setFontSize(size.value)"
                                 class="flex flex-col items-center p-1 cursor-pointer"
                             >
-                                <span :style="{ fontSize: size.value }">{{ size.name }}</span>
+                                <span>{{ size.name }}</span>
                             </DropdownMenuItem>
                         </div>
                     </DropdownMenuContent>
@@ -561,7 +561,7 @@ function setFontFamily(family: string) {
             </div>
         </BubbleMenu>
 
-        <EditorContent :editor="editor" class="min-h-[200px]" />
+        <EditorContent :editor="editor" class="min-h-[200px] prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl" />
     </div>
 </template>
 
