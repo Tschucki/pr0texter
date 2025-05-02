@@ -9,6 +9,11 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.{vue,js,ts,jsx,tsx}',
     ],
+    safelist: [
+        {
+            pattern: /./,
+        },
+    ],
     theme: {
         extend: {
             fontFamily: {
