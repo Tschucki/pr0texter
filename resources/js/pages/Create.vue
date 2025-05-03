@@ -149,7 +149,7 @@ onBeforeUnmount(() => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
             <form
-                class="relative p-4 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border space-y-4">
+                class="relative p-4 overflow-clip rounded-xl border border-sidebar-border/70 dark:border-sidebar-border space-y-4">
                 <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
                     Post erstellen
                 </h1>

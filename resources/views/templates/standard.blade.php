@@ -15,6 +15,15 @@
     @vite(['resources/css/app.css'])
 </head>
 <body class="antialiased bg-[#161618] prose dark:prose-invert py-4 px-2
+text-[#f2f5f4]
+!prose-2xl
+!leading-tight
+prose-invert-[#f2f5f4]
+prose-p:text-2xl
+prose-p:leading-tight
+prose-h1:text-6xl
+prose-h2:text-5xl
+prose-h3:text-4xl
     prose-h1:text-6xl
     prose-h2:text-5xl
     prose-h3:text-4xl

@@ -3,11 +3,11 @@ import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import TextAlign from '@tiptap/extension-text-align';
 import ResizeImage from 'tiptap-extension-resize-image';
-import { FontFamily } from '@tiptap/extension-font-family'
+import { FontFamily } from '@tiptap/extension-font-family';
 import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
-import CodeBlock from '@tiptap/extension-code-block'
-import { Editor as TiptapEditor, EditorContent, BubbleMenu } from '@tiptap/vue-3';
+import CodeBlock from '@tiptap/extension-code-block';
+import { BubbleMenu, Editor as TiptapEditor, EditorContent } from '@tiptap/vue-3';
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
 import {
@@ -41,7 +41,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
-import { HoverCardContent, HoverCardTrigger, HoverCard } from '@/components/ui/hover-card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { FontSize } from '@/extensions/font-size';
 
 const props = defineProps({
@@ -96,10 +96,10 @@ const colorOptions = [
 
 const fontSizeOptions = [
     { name: 'Klein', value: '1rem' },
-    { name: 'Normal', value: '2rem' },
-    { name: 'Groß', value: '4rem' },
-    { name: 'Sehr groß', value: '6rem' },
-    { name: 'Riesig', value: '8rem' }
+    { name: 'Normal', value: '1.5rem' },
+    { name: 'Groß', value: '3rem' },
+    { name: 'Sehr groß', value: '5rem' },
+    { name: 'Riesig', value: '6.5rem' }
 ];
 
 const fontFamilyOptions = [
@@ -168,12 +168,16 @@ onMounted(() => {
         content: props.modelValue,
         editorProps: {
             attributes: {
-                class: 'prose dark:prose-invert max-w-none focus:outline-none px-4 py-3',
-                spellcheck: 'false'
+                class: 'prose !prose-invert text-[#f2f5f4] max-w-none focus:outline-none px-4 py-3 !prose-2xl min-h-[200px] prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl !leading-tight prose-p:leading-tight',
+                spellcheck: 'true'
             }
         },
         onUpdate: ({ editor }) => {
             emit('update:modelValue', editor.getHTML());
+        },
+        autofocus: 'start',
+        onContentError: (error) => {
+            console.error('Content error:', error);
         }
     });
 });
@@ -196,7 +200,7 @@ function setColor(color: string) {
 
 function setFontSize(size: string) {
     if (editor.value) {
-        editor.value.chain().focus().setFontSize(`${size}`).run()
+        editor.value.chain().focus().setFontSize(`${size}`).run();
     }
 }
 
@@ -208,8 +212,8 @@ function setFontFamily(family: string) {
 </script>
 
 <template>
-    <div class="border rounded-lg overflow-hidden bg-background">
-        <div v-if="editor" class="border-b p-1 flex flex-wrap gap-1">
+    <div class="border rounded-lg overflow-clip bg-background">
+        <div v-if="editor" class="border-b px-1 py-4 flex flex-wrap gap-1 sticky top-0 bg-background z-10">
             <div class="flex-shrink-0 flex gap-1">
                 <Button
                     variant="ghost"
@@ -491,7 +495,6 @@ function setFontFamily(family: string) {
                 </Button>
             </div>
         </div>
-
         <BubbleMenu v-if="editor" :editor="editor" :tippyOptions="{ duration: 500, placement: 'bottom' }">
             <div class="flex items-center gap-1 p-1 rounded-lg bg-background border shadow-lg">
                 <Button
@@ -561,7 +564,7 @@ function setFontFamily(family: string) {
             </div>
         </BubbleMenu>
 
-        <EditorContent :editor="editor" class="min-h-[200px] prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl" />
+        <EditorContent :editor="editor" />
     </div>
 </template>
 
