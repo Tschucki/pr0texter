@@ -12,7 +12,7 @@
     <link href="https://fonts.bunny.net/css?family=Georgia:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Times New Roman:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Verdana:400,500,600" rel="stylesheet" />
-    @vite(['resources/css/app.css'])
+    @vite(['resources/js/app.ts'])
 </head>
 <body class="antialiased bg-[#161618] prose dark:prose-invert py-4 px-2
 text-[#f2f5f4]
@@ -24,13 +24,9 @@ prose-p:leading-tight
 prose-h1:text-6xl
 prose-h2:text-5xl
 prose-h3:text-4xl
-    prose-h1:text-6xl
-    prose-h2:text-5xl
-    prose-h3:text-4xl
   prose-headings:font-bold
   prose-headings:text-[#f2f5f4]
   prose-p:text-[#f2f5f4]
-  prose-p:text-lg
   prose-a:text-[#f2f5f4]
   prose-a:opacity-90
   prose-a:hover:opacity-100
