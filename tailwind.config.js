@@ -9,11 +9,11 @@ export default {
         './resources/views/**/*.blade.php',
         './resources/js/**/*.{vue,js,ts,jsx,tsx}',
     ],
-    safelist: process.env.NODE_ENV === 'production' ? [
+    safelist: [
         {
             pattern: /./,
         },
-    ] : [],
+    ],
     theme: {
         extend: {
             fontFamily: {
