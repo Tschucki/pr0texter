@@ -22,6 +22,7 @@ class PreviewController extends Controller
             ->fullPage()
             ->preventUnsuccessfulResponse()
             ->hideBrowserHeaderAndFooter()
+            ->waitUntilNetworkIdle()
             ->windowSize(1043, 0)
             ->setNodeBinary(config('binaries.node'))
             ->setNpmBinary(config('binaries.npm'))
