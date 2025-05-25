@@ -26,7 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
-        $schedule->command(DeleteOldImagesCommand::class)->hourly();
+        $schedule->command(DeleteOldImagesCommand::class)->everyTwoHours();
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
