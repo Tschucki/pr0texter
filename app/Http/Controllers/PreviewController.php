@@ -25,6 +25,7 @@ class PreviewController extends Controller
             ->hideBrowserHeaderAndFooter()
             ->setOption('args', ['--disable-web-security'])
             ->waitUntilNetworkIdle()
+            ->disableJavascript()
             ->windowSize(1043, 0)
             ->setNodeBinary(config('binaries.node'))
             ->setNpmBinary(config('binaries.npm'))
