@@ -242,6 +242,15 @@ function toggleTableBorders() {
         }
     }
 }
+
+const reset = () => {
+    const confirmed = confirm('Inhalt zurücksetzen?');
+
+    if (confirmed && editor.value) {
+        editor.value.commands.setContent('<p></p>', false);
+        emit('update:modelValue', '<p></p>');
+    }
+};
 </script>
 
 <template>
@@ -627,6 +636,14 @@ function toggleTableBorders() {
                     @click="editor.chain().focus().clearNodes().run(); editor.chain().focus().unsetAllMarks().run()"
                 >
                     <X class="size-4" />
+                </Button>
+                <Button
+                    variant="ghost"
+                    type="button"
+                    size="sm"
+                    @click="reset()"
+                >
+                    Zurücksetzen
                 </Button>
             </div>
         </div>

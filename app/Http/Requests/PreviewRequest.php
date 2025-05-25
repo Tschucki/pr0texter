@@ -15,6 +15,7 @@ class PreviewRequest extends FormRequest
     {
         return [
             'tipTapContent' => 'required|string',
+            'resize' => 'boolean|nullable'
         ];
     }
 }

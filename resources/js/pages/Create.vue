@@ -61,6 +61,7 @@ const throttledGetPreview = _.throttle(() => {
 }, 500);
 
 const abortController = ref<AbortController | null>(null);
+const resize = ref<boolean>(false);
 
 const abortPreviousRequest = () => {
     if (abortController.value) {
@@ -81,7 +82,8 @@ const getPreview = () => {
     try {
         if (abortController.value) {
             axios.post(route('preview', {
-                template: props.template.slug
+                template: props.template.slug,
+                resize: resize.value
             }), {
                 tipTapContent: editorContent.value
             }, {

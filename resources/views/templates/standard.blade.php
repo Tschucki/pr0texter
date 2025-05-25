@@ -42,7 +42,7 @@ prose-h3:text-4xl
   prose-blockquote:border-l-[hsl(--border)]/30
   prose-hr:border-[hsl(--border)]/20
   prose-img:rounded-2xl
-  max-w-full w-full">
+  max-w-[1052px] w-full">
 {!! $content !!}
 </body>
 </html>

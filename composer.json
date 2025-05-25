@@ -14,6 +14,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "spatie/browsershot": "^5.0",
+        "spatie/image": "^3.8",
         "spatie/laravel-sluggable": "^3.7",
         "tightenco/ziggy": "^2.4"
     },

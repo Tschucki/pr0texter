@@ -7,6 +7,7 @@ use App\Models\Template;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Spatie\Browsershot\Browsershot;
+use Spatie\Image\Image;
 
 class PreviewController extends Controller
 {
@@ -26,10 +27,13 @@ class PreviewController extends Controller
             ->setOption('args', ['--disable-web-security'])
             ->waitUntilNetworkIdle()
             ->disableJavascript()
-            ->windowSize(1043, 0)
+            ->windowSize(1052, 0)
             ->setNodeBinary(config('binaries.node'))
             ->setNpmBinary(config('binaries.npm'))
             ->save($imagePath);
+
+        $image = Image::load($imagePath);
+        $image->width(1052)->save();
 
         return response()
             ->download($imagePath,
