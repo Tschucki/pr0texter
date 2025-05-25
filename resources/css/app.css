@@ -262,3 +262,7 @@ html {
 .ProseMirror code {
     background-color: unset;
 }
+
+.ProseMirror ::marker {
+    color: hsl(var(--tw-prose-invert-bullets)) !important;
+}

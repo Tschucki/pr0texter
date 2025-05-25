@@ -161,7 +161,7 @@ onMounted(() => {
                 heading: { levels: [1, 2, 3] }
             }),
             TextAlign.configure({
-                types: ['heading', 'paragraph', 'image']
+                types: ['heading', 'paragraph', 'image', 'codeBlock']
             }),
             Image.configure({
                 HTMLAttributes: { class: 'rounded-lg' },

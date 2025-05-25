@@ -71,7 +71,6 @@ const abortPreviousRequest = () => {
 
 const getPreview = () => {
     loading.value = true;
-    console.log(loading.value);
 
     if (previewImage.value) {
         URL.revokeObjectURL(previewImage.value);
@@ -102,9 +101,7 @@ const getPreview = () => {
                 previewImage.value = URL.createObjectURL(response.data);
                 loading.value = false;
             }).catch((error) => {
-                if (axios.isCancel(error)) {
-                    console.log('Request canceled', error.message);
-                } else {
+                if (!axios.isCancel(error)) {
                     console.log(error);
                 }
             });
@@ -188,7 +185,14 @@ onBeforeUnmount(() => {
                 <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
                     Ein neuer pr0texter für das pr0gramm
                 </h1>
-                <div class="justify-center flex flex-col items-center"></div>
+                <div class="flex flex-col">
+                    Mit diesem Tool kannst du einfach und schnell Posts für pr0gramm erstellen.
+                    <br />
+                    Du kannst den Inhalt direkt im Editor bearbeiten und die Vorschau wird automatisch aktualisiert.
+                    <br />
+                    <br />
+                    Deine hochgeladenen Bilder werden automatisch nach 2 Stunden vom Server gelöscht.
+                </div>
             </div>
         </div>
     </AppLayout>
