@@ -20,6 +20,8 @@ class PreviewController extends Controller
             ->noSandbox()
             ->deviceScaleFactor(3) // 3 is max
             ->fullPage()
+            ->preventUnsuccessfulResponse()
+            ->hideBrowserHeaderAndFooter()
             ->windowSize(1043, 0)
             ->setNodeBinary(config('binaries.node'))
             ->setNpmBinary(config('binaries.npm'))
@@ -33,6 +35,6 @@ class PreviewController extends Controller
                     'Expires' => 0,
                 ]
             )
-            ->deleteFileAfterSend(true);
+            ->deleteFileAfterSend();
     }
 }

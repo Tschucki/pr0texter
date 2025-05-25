@@ -6,21 +6,20 @@
 
 body,
 html {
-    --font-sans:
-        'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
     --tw-prose-invert-bullets: '#f2f5f4',
 }
 
 .prose {
-    --tw-prose-invert-bullets: '#f2f5f4' !important;
-    --tw-prose-invert-counters: '#f2f5f4' !important;
-    --tw-prose-invert-quote-borders: '#f2f5f4' !important;
-    --tw-prose-quote-borders: '#f2f5f4' !important;
-    --tw-prose-invert-hr: '#f2f5f4' !important;
-    --tw-prose-hr: '#f2f5f4' !important;
-    --tw-prose-invert-captions: '#f2f5f4' !important;
-    --tw-prose-invert-th-borders: '#f2f5f4' !important;
-    --tw-prose-invert-td-borders: '#f2f5f4' !important;
+    --tw-prose-invert-bullets: hsl(var(--border)) !important;
+    --tw-prose-invert-counters: hsl(var(--border)) !important;
+    --tw-prose-invert-quote-borders: hsl(var(--border)) !important;
+    --tw-prose-quote-borders: hsl(var(--border)) !important;
+    --tw-prose-invert-hr: hsl(var(--border)) !important;
+    --tw-prose-hr: hsl(var(--border)) !important;
+    --tw-prose-invert-captions: hsl(var(--border)) !important;
+    --tw-prose-invert-th-borders: hsl(var(--border)) !important;
+    --tw-prose-invert-td-borders: hsl(var(--border)) !important;
 }
 
 @layer base {
@@ -106,6 +105,9 @@ html {
     }
 }
 
+.ProseMirror {
+    will-change: transform;
+}
 
 .ProseMirror .resize-handle {
     position: absolute;
@@ -151,6 +153,8 @@ html {
     max-width: 100%;
     height: auto;
     transition: all 0.1s ease;
+    margin: 0;
+    transform: translateZ(0);
 }
 
 .ProseMirror img.ProseMirror-selectednode {
@@ -160,4 +164,101 @@ html {
 .ProseMirror .image-container {
     position: relative;
     display: inline-block;
+}
+
+.ProseMirror table {
+    border-collapse: collapse;
+    margin: 0;
+    overflow: hidden;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.ProseMirror table td,
+.ProseMirror table th {
+    border: 1px solid hsl(var(--sidebar-border));
+    box-sizing: border-box;
+    min-width: 1em;
+    padding: 6px 8px;
+    position: relative;
+    vertical-align: top;
+}
+
+.ProseMirror table td > *,
+.ProseMirror table th > * {
+    margin-bottom: 0;
+}
+
+.ProseMirror table th {
+    background-color: hsl(var(--sidebar-background));
+    font-weight: bold;
+    text-align: left;
+}
+
+.ProseMirror table .selectedCell:after {
+    background: hsl(var(--accent));
+    content: "";
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    position: absolute;
+    z-index: 2;
+}
+
+.ProseMirror table .column-resize-handle {
+    background-color: hsl(var(--accent));
+    bottom: -2px;
+    pointer-events: none;
+    position: absolute;
+    right: -2px;
+    top: 0;
+    width: 4px;
+}
+
+.ProseMirror .tableWrapper {
+    margin: 1.5rem 0;
+    overflow-x: auto;
+}
+
+.ProseMirror.resize-cursor {
+    cursor: ew-resize;
+    cursor: col-resize;
+}
+
+.ProseMirror table.no-borders,
+.ProseMirror table.no-borders td,
+.ProseMirror table.no-borders th {
+    border: none !important;
+}
+
+.ProseMirror table.no-borders .column-resize-handle {
+    background-color: transparent !important;
+}
+
+.ProseMirror td p {
+    margin: 0 !important;
+    font-size: .8333333em !important
+}
+
+.ProseMirror th p {
+    margin: 0 !important;
+    font-size: .8333333em !important;
+}
+
+.ProseMirror th {
+    padding: 16px 12px !important;
+}
+
+.ProseMirror strong {
+    color: unset !important;
+}
+
+.ProseMirror em {
+    color: unset !important;
+}
+
+.ProseMirror code {
+    background-color: unset;
 }

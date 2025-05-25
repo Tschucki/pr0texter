@@ -8,8 +8,12 @@ import TextStyle from '@tiptap/extension-text-style';
 import Color from '@tiptap/extension-color';
 import CodeBlock from '@tiptap/extension-code-block';
 import { BubbleMenu, Editor as TiptapEditor, EditorContent } from '@tiptap/vue-3';
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import axios from 'axios';
+import Table from '@tiptap/extension-table';
+import TableRow from '@tiptap/extension-table-row';
+import TableCell from '@tiptap/extension-table-cell';
+import TableHeader from '@tiptap/extension-table-header';
 import {
     AlignCenter,
     AlignJustify,
@@ -17,6 +21,7 @@ import {
     AlignRight,
     Bold,
     Code,
+    Grid2X2,
     Heading1,
     Heading2,
     Heading3,
@@ -30,6 +35,8 @@ import {
     Quote,
     Redo,
     Strikethrough,
+    TableIcon,
+    Trash2,
     Undo,
     X
 } from 'lucide-vue-next';
@@ -96,7 +103,7 @@ const colorOptions = [
 
 const fontSizeOptions = [
     { name: 'Klein', value: '1rem' },
-    { name: 'Normal', value: '1.5rem' },
+    { name: 'Normal', value: '1.8rem' },
     { name: 'Groß', value: '3rem' },
     { name: 'Sehr groß', value: '5rem' },
     { name: 'Riesig', value: '6.5rem' }
@@ -115,9 +122,11 @@ const fontFamilyOptions = [
 
 watch(() => props.modelValue, (value) => {
     if (editor.value && editor.value.getHTML() !== value) {
-        editor.value.commands.setContent(value, false);
+        nextTick(() => {
+            editor.value?.commands.setContent(value, false);
+        });
     }
-});
+}, { deep: false });
 
 function handleImageUpload(event: Event) {
     const input = event.target as HTMLInputElement;
@@ -146,16 +155,16 @@ function handleImageUpload(event: Event) {
 }
 
 onMounted(() => {
-    editor.value = new TiptapEditor({
-        extensions: [
-            StarterKit,
+    nextTick(() => {
+        const extensions = [
+            StarterKit.configure({
+                heading: { levels: [1, 2, 3] }
+            }),
             TextAlign.configure({
                 types: ['heading', 'paragraph', 'image']
             }),
             Image.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg'
-                },
+                HTMLAttributes: { class: 'rounded-lg' },
                 allowBase64: true
             }),
             ResizeImage,
@@ -163,22 +172,33 @@ onMounted(() => {
             FontFamily,
             FontSize,
             CodeBlock,
-            Color
-        ],
-        content: props.modelValue,
-        editorProps: {
-            attributes: {
-                class: 'prose !prose-invert text-[#f2f5f4] max-w-none focus:outline-none px-4 py-3 !prose-2xl min-h-[200px] prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl !leading-tight prose-p:leading-tight',
-                spellcheck: 'true'
+            Color,
+            Table.configure({
+                resizable: true,
+                HTMLAttributes: { class: 'border-collapse table-auto w-full' }
+            }),
+            TableRow,
+            TableHeader,
+            TableCell
+        ];
+
+        editor.value = new TiptapEditor({
+            extensions,
+            content: props.modelValue,
+            editorProps: {
+                attributes: {
+                    class: 'prose !prose-invert text-[#f2f5f4] max-w-none focus:outline-none px-4 py-3 !prose-2xl min-h-[200px] prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl !leading-tight prose-p:leading-tight',
+                    spellcheck: 'true'
+                }
+            },
+            onUpdate: ({ editor }) => {
+                emit('update:modelValue', editor.getHTML());
+            },
+            autofocus: 'start',
+            onContentError: (error) => {
+                console.error('Content error:', error);
             }
-        },
-        onUpdate: ({ editor }) => {
-            emit('update:modelValue', editor.getHTML());
-        },
-        autofocus: 'start',
-        onContentError: (error) => {
-            console.error('Content error:', error);
-        }
+        });
     });
 });
 
@@ -207,6 +227,19 @@ function setFontSize(size: string) {
 function setFontFamily(family: string) {
     if (editor.value) {
         editor.value.chain().focus().setFontFamily(family).run();
+    }
+}
+
+function toggleTableBorders() {
+    if (editor.value) {
+        const element = editor.value.view.dom.querySelector('.ProseMirror table');
+        if (element) {
+            if (element.classList.contains('no-borders')) {
+                element.classList.remove('no-borders');
+            } else {
+                element.classList.add('no-borders');
+            }
+        }
     }
 }
 </script>
@@ -414,6 +447,108 @@ function setFontFamily(family: string) {
             <Separator orientation="vertical" class="h-8 mx-1" />
 
             <div class="flex-shrink-0 flex gap-1">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                            <TableIcon class="size-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent>
+                        <div class="p-2 flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()"
+                                >
+                                    <Grid2X2 class="size-4 mr-2" />
+                                    Tabelle einfügen
+                                </Button>
+                            </div>
+                            <div v-if="editor.isActive('table')" class="flex flex-col gap-1">
+                                <Separator class="my-1" />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().addColumnBefore().run()"
+                                >
+                                    Spalte davor einfügen
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().addColumnAfter().run()"
+                                >
+                                    Spalte danach einfügen
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().deleteColumn().run()"
+                                >
+                                    Spalte löschen
+                                </Button>
+                                <Separator class="my-1" />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().addRowBefore().run()"
+                                >
+                                    Zeile davor einfügen
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().addRowAfter().run()"
+                                >
+                                    Zeile danach einfügen
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().deleteRow().run()"
+                                >
+                                    Zeile löschen
+                                </Button>
+                                <Separator class="my-1" />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().toggleHeaderCell().run()"
+                                >
+                                    Header umschalten
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="editor.chain().focus().mergeOrSplit().run()"
+                                >
+                                    Zellen verbinden/teilen
+                                </Button>
+                                <Separator class="my-1" />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    @click="toggleTableBorders"
+                                >
+                                    Tabellenränder umschalten
+                                </Button>
+                                <Separator class="my-1" />
+                                <Button
+                                    variant="destructive"
+                                    size="sm"
+                                    @click="editor.chain().focus().deleteTable().run()"
+                                >
+                                    <Trash2 class="size-4 mr-2" />
+                                    Tabelle löschen
+                                </Button>
+                            </div>
+                        </div>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+            </div>
+
+            <div class="flex-shrink-0 flex gap-1">
                 <Button
                     variant="ghost"
                     type="button"
@@ -564,9 +699,9 @@ function setFontFamily(family: string) {
             </div>
         </BubbleMenu>
 
-        <EditorContent :editor="editor" />
+        <EditorContent :editor="editor" class="text-[1.8rem]" />
     </div>
 </template>
 
-<style>
+<style lang="scss">
 </style>
