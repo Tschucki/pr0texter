@@ -184,6 +184,11 @@ const downloadImage = () => {
                     Vorschau
                 </h1>
                 <div class="justify-center flex flex-col items-center">
+                    <Button @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
+                            class="mb-4">
+                        <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
+                        <span v-else>Bild herunterladen</span>
+                    </Button>
                     <div v-if="loading" class="h-[30dvh] flex items-center justify-center gap-4 flex-col">
                         <Loader2 class="animate-spin text-4xl aspect-square"></Loader2>
                         <p>
@@ -201,11 +206,6 @@ const downloadImage = () => {
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
                              class="max-w-[1052px] w-full h-full object-cover" />
                     </div>
-                    <Button @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
-                            class="mt-4">
-                        <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
-                        <span v-else>Bild herunterladen</span>
-                    </Button>
                 </div>
             </div>
             <div
