@@ -194,8 +194,8 @@ const downloadImage = () => {
                         <div v-if="fileSize" class="text-sm text-gray-500 mb-2 flex justify-between flex-wrap">
                             Bildgröße: {{ fileSize }} (Max: 20MB für pr0gramm)
                             <div class="flex items-center gap-2">
-                                <Switch id="resize" v-model="resize" />
                                 <Label for="resize">Maximale Breite 1052px</Label>
+                                <Switch id="resize" v-model="resize" />
                             </div>
                         </div>
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
