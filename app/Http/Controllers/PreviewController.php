@@ -23,6 +23,7 @@ class PreviewController extends Controller
             ->preventUnsuccessfulResponse()
             ->delay(1000)
             ->hideBrowserHeaderAndFooter()
+            ->setOption('args', ['--disable-web-security'])
             ->waitUntilNetworkIdle()
             ->windowSize(1043, 0)
             ->setNodeBinary(config('binaries.node'))
