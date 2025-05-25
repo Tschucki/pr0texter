@@ -1,3 +1,8 @@
+<div style="display: flex; align-items: center; gap: 10px;justify-content: center">
+<img src="./.github/art/pr0texter.png" alt="Screenshot" height="50px" width="50px">
+<strong>pr0texter</strong>
+</div>
+
 # pr0texter - Create OC Images for pr0gramm
 
 A modern editor for creating high-quality posts for pr0gramm.
