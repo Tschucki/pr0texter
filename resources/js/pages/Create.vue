@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { usePage } from '@inertiajs/vue3';
+import { Head, usePage } from '@inertiajs/vue3';
 import Editor from '@/components/Editor.vue';
 import { useForm } from 'vee-validate';
 import { toTypedSchema } from '@vee-validate/zod';
-import {Head} from '@inertiajs/vue3';
 import { z } from 'zod';
 import { Loader2 } from 'lucide-vue-next';
 import { FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form';
@@ -13,6 +12,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { route } from 'ziggy-js';
 import _ from 'lodash';
 import axios from 'axios';
+import { Button } from '@/components/ui/button';
 
 const props = defineProps({
     template: {
@@ -27,14 +27,14 @@ const props = defineProps({
 });
 
 const breadcrumbs: BreadcrumbItem[] = [
- /*   {
-        title: 'Neuen Post erstellen',
-        href: '/'
-    },
-    {
-        title: 'Template auswählen',
-        href: '/'
-    },*/
+    /*   {
+           title: 'Neuen Post erstellen',
+           href: '/'
+       },
+       {
+           title: 'Template auswählen',
+           href: '/'
+       },*/
     {
         title: 'Template ' + props.template.title,
         href: (usePage().props as any).ziggy.location.location
@@ -137,6 +137,17 @@ onBeforeUnmount(() => {
     }
 });
 
+const downloadImage = () => {
+    if (previewImage.value) {
+        const link = document.createElement('a');
+        link.href = previewImage.value;
+        link.download = `preview_${props.template.slug}.png`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+};
+
 </script>
 
 <template>
@@ -178,6 +189,11 @@ onBeforeUnmount(() => {
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
                              class="max-w-[1052px] w-full h-full object-cover" />
                     </div>
+                    <Button @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
+                            class="mt-4">
+                        <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
+                        <span v-else>Bild herunterladen</span>
+                    </Button>
                 </div>
             </div>
             <div
@@ -185,13 +201,51 @@ onBeforeUnmount(() => {
                 <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
                     Ein neuer pr0texter für das pr0gramm
                 </h1>
-                <div class="flex flex-col">
+                <div>
                     Mit diesem Tool kannst du einfach und schnell Posts für pr0gramm erstellen.
+                    Ich habe geplant, mehrere Templates zu erstellen, aus denen du wählen kannst. Bspw. soll es ein
+                    zukünftig ein Template geben, bei dem du ein Hintergrundbild auswählen kannst, das dann hinter dem
+                    Post dargestellt wird.<br>
+                    Vorerst gibt es allerdings nur das Standard-Template, das du hier siehst.
+                    <br />
                     <br />
                     Du kannst den Inhalt direkt im Editor bearbeiten und die Vorschau wird automatisch aktualisiert.
                     <br />
                     <br />
-                    Deine hochgeladenen Bilder werden automatisch nach 2 Stunden vom Server gelöscht.
+                    Folgende Features sind verfügbar:
+                    <ul class="list-disc pl-5">
+                        <li>Textformatierung (Fett, Kursiv, Unterstrichen)</li>
+                        <li>Listen erstellen (nummeriert und unnummeriert)</li>
+                        <li>Schriftarten wechseln</li>
+                        <li>Codeblöcke einfügen</li>
+                        <li>Hochladen von Bildern</li>
+                        <li>Automatische Vorschau des Posts</li>
+                        <li>Download der Vorschau als Bild</li>
+                        <li>Überschriften und Absätze formatieren</li>
+                        <li>pr0gramm-Farbpalette für den Editor</li>
+                        <li>Automatisches Speichern des Inhalts im Browser</li>
+                        <li>Tabellen erstellen</li>
+                        <li>Zitate</li>
+                        <li>Horizontal-Linien</li>
+                        <li>Undo/Redo-Funktion</li>
+                    </ul>
+                    <br>
+                    Deine hochgeladenen Bilder werden automatisch nach 2 Stunden vom Server gelöscht.<br />
+                    Das Bild wird serverseitig generiert (also nicht clientseitig im Browser).<br />
+                </div>
+                <h2 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    Wie funktioniert das Tool?
+                </h2>
+                <div>
+                    Das Projekt ist Open Source und du kannst dir den Code auf <a
+                    href="https://github.com/Tschucki/pr0texter" target="_blank">GitHub</a> ansehen.<br><br>
+                    Den Editor, den du hier siehst, ist ein <a href="https://tiptap.dev/"
+                                                               target="_blank">TipTap-Editor</a>, mit einigen
+                    pr0gramm-spezifischen Extensions.
+                    Der Editor generiert den Post als HTML, das dann an den Server gesendet wird.<br>
+                    Auf dem Server wird dann das HTML in das vorgesehene Template geladen und <a
+                    href="https://pptr.dev/" target="_blank">Puppeteer</a> macht einen Screenshot und der Server sendet
+                    das Bild zurück.
                 </div>
             </div>
         </div>
