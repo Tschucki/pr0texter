@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=Inter:400,500,600" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=Montserrat:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Futura:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Courier New:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Georgia:400,500,600" rel="stylesheet" />
