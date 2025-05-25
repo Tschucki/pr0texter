@@ -42,7 +42,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 
-const editorContent = ref('<h1>Der neue pr0texter für das pr0gramm</h1>');
+const editorContent = ref('<p>Der neue pr0texter für das pr0gramm</p>');
 const loading = ref(false);
 const previewImage = ref('');
 const fileSize = ref('');
