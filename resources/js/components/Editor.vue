@@ -117,7 +117,8 @@ const fontFamilyOptions = [
     { name: 'Courier New', value: '"Courier New", Courier, monospace' },
     { name: 'Georgia', value: 'Georgia, serif' },
     { name: 'Times New Roman', value: '"Times New Roman", Times, serif' },
-    { name: 'Verdana', value: 'Verdana, sans-serif' }
+    { name: 'Verdana', value: 'Verdana, sans-serif' },
+    { name: 'Roboto', value: 'Roboto, sans-serif' }
 ];
 
 watch(() => props.modelValue, (value) => {

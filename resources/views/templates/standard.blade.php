@@ -11,6 +11,7 @@
     <link href="https://fonts.bunny.net/css?family=Georgia:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Times New Roman:400,500,600" rel="stylesheet" />
     <link href="https://fonts.bunny.net/css?family=Verdana:400,500,600" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=Roboto:400,500,600" rel="stylesheet" />
     @vite(['resources/css/app.css'])
 </head>
 <body class="antialiased bg-[#161618] prose dark:prose-invert py-4 px-2
