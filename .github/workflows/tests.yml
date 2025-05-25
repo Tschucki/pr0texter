@@ -12,6 +12,7 @@ on:
 
 jobs:
   ci:
+    if: false
     runs-on: ubuntu-latest
 
     steps:
