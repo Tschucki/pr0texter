@@ -13,6 +13,8 @@ import { route } from 'ziggy-js';
 import _ from 'lodash';
 import axios from 'axios';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const props = defineProps({
     template: {
@@ -61,7 +63,7 @@ const throttledGetPreview = _.throttle(() => {
 }, 500);
 
 const abortController = ref<AbortController | null>(null);
-const resize = ref<boolean>(false);
+const resize = ref<boolean>(true);
 
 const abortPreviousRequest = () => {
     if (abortController.value) {
@@ -121,6 +123,10 @@ watch(form.values, () => {
 
 watch(editorContent, (newContent) => {
     localStorage.setItem(storageKey.value, newContent);
+    throttledGetPreview();
+});
+
+watch(resize, () => {
     throttledGetPreview();
 });
 
@@ -185,8 +191,12 @@ const downloadImage = () => {
                         </p>
                     </div>
                     <div v-else>
-                        <div v-if="fileSize" class="text-sm text-gray-500 mb-2">
+                        <div v-if="fileSize" class="text-sm text-gray-500 mb-2 flex justify-between flex-wrap">
                             Bildgröße: {{ fileSize }} (Max: 20MB für pr0gramm)
+                            <div class="flex items-center gap-2">
+                                <Switch id="resize" v-model="resize" />
+                                <Label for="resize">Original-Größe</Label>
+                            </div>
                         </div>
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
                              class="max-w-[1052px] w-full h-full object-cover" />

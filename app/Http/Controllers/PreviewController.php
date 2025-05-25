@@ -32,8 +32,10 @@ class PreviewController extends Controller
             ->setNpmBinary(config('binaries.npm'))
             ->save($imagePath);
 
-        $image = Image::load($imagePath);
-        $image->width(1052)->save();
+        if ($request->get('resize')) {
+            $image = Image::load($imagePath);
+            $image->width(1052)->save();
+        }
 
         return response()
             ->download($imagePath,
