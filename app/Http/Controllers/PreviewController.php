@@ -21,6 +21,7 @@ class PreviewController extends Controller
             ->deviceScaleFactor(3) // 3 is max
             ->fullPage()
             ->preventUnsuccessfulResponse()
+            ->delay(1000)
             ->hideBrowserHeaderAndFooter()
             ->waitUntilNetworkIdle()
             ->windowSize(1043, 0)
