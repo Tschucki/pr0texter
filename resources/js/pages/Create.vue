@@ -48,6 +48,7 @@ const editorContent = ref('<p>Der neue pr0texter für das pr0gramm</p>');
 const loading = ref(false);
 const previewImage = ref('');
 const fileSize = ref('');
+const autoGeneratePreview = ref(true);
 
 
 const formSchema = toTypedSchema(z.object({
@@ -118,11 +119,17 @@ const getPreview = () => {
 const storageKey = ref(`editor_content_${props.template.slug}`);
 
 watch(form.values, () => {
+    if(autoGeneratePreview.value === false) {
+        return;
+    }
     throttledGetPreview();
 });
 
 watch(editorContent, (newContent) => {
     localStorage.setItem(storageKey.value, newContent);
+    if(autoGeneratePreview.value === false) {
+        return;
+    }
     throttledGetPreview();
 });
 
@@ -184,11 +191,25 @@ const downloadImage = () => {
                     Vorschau
                 </h1>
                 <div class="justify-center flex flex-col items-center">
-                    <Button @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
-                            class="mb-4">
+                    <Button v-if="!loading" @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
+                            class="mb-4 w-full max-w-[1052px]">
                         <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
                         <span v-else>Bild herunterladen</span>
                     </Button>
+                    <div v-if="!loading" class="w-full items-center flex justify-between gap-4 max-w-[1052px]">
+                        <Button @click.prevent="throttledGetPreview" type="button"
+                                variant="default"
+                                class="mb-4 w-1/2">
+                            <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
+                            <span v-else>Aktuelle Vorschau generieren</span>
+                        </Button>
+                        <div class="text-sm text-gray-500 mb-2 flex justify-between flex-wrap">
+                            <div class="flex items-center gap-2">
+                                <Label for="resize">Vorschau automatisch generieren</Label>
+                                <Switch id="resize" v-model="autoGeneratePreview" />
+                            </div>
+                        </div>
+                    </div>
                     <div v-if="loading" class="h-[30dvh] flex items-center justify-center gap-4 flex-col">
                         <Loader2 class="animate-spin text-4xl aspect-square"></Loader2>
                         <p>
