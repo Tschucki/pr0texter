@@ -48,7 +48,7 @@ const editorContent = ref('<p>Der neue pr0texter für das pr0gramm</p>');
 const loading = ref(false);
 const previewImage = ref('');
 const fileSize = ref('');
-const autoGeneratePreview = ref(true);
+const autoGeneratePreview = ref(false);
 
 
 const formSchema = toTypedSchema(z.object({
