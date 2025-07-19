@@ -119,7 +119,7 @@ const getPreview = () => {
 const storageKey = ref(`editor_content_${props.template.slug}`);
 
 watch(form.values, () => {
-    if(autoGeneratePreview.value === false) {
+    if (autoGeneratePreview.value === false) {
         return;
     }
     throttledGetPreview();
@@ -127,7 +127,7 @@ watch(form.values, () => {
 
 watch(editorContent, (newContent) => {
     localStorage.setItem(storageKey.value, newContent);
-    if(autoGeneratePreview.value === false) {
+    if (autoGeneratePreview.value === false) {
         return;
     }
     throttledGetPreview();
@@ -163,11 +163,59 @@ const downloadImage = () => {
     }
 };
 
+
+const postExport = () => {
+
+    console.log("Export localStorage as file");
+
+    let content = String(localStorage.getItem("editor_content_standard"));
+
+    let blob = new Blob([content], {
+        type: "text/html",
+    });
+
+    let fileURL = URL.createObjectURL(blob);
+    let link = document.createElement("a");
+
+    link.setAttribute("href", fileURL);
+    link.setAttribute("download", "post.html");
+
+    link.click();
+    link.remove();
+
+};
+
+const postImport = () => {
+
+    console.log("Import localStorage as file");
+
+    let reader = new FileReader();
+    let input = document.createElement("input");
+
+    reader.addEventListener("loadend", (event) => {
+
+        input.remove();
+
+        localStorage.setItem("editor_content_standard", reader.result);
+        editorContent.value = reader.result;
+
+    });
+
+    input.addEventListener("change", () => {
+        reader.readAsText(input.files[0]);
+    });
+
+    input.setAttribute("type", "file");
+    input.click();
+
+};
+
 </script>
 
 <template>
+
     <Head>
-        <title>Post erstellen - Template {{usePage().props.template.title}}</title>
+        <title>Post erstellen - Template {{ usePage().props.template.title }}</title>
     </Head>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
@@ -191,15 +239,13 @@ const downloadImage = () => {
                     Vorschau
                 </h1>
                 <div class="justify-center flex flex-col items-center">
-                    <Button v-if="!loading" @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
-                            class="mb-4 w-full max-w-[1052px]">
+                    <Button v-if="!loading" @click.prevent="downloadImage" :disabled="loading" type="button"
+                        variant="default" class="mb-4 w-full max-w-[1052px]">
                         <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
                         <span v-else>Bild herunterladen</span>
                     </Button>
                     <div v-if="!loading" class="w-full items-center flex justify-between gap-4 max-w-[1052px]">
-                        <Button @click.prevent="throttledGetPreview" type="button"
-                                variant="default"
-                                class="mb-4 w-1/2">
+                        <Button @click.prevent="throttledGetPreview" type="button" variant="default" class="mb-4 w-1/2">
                             <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
                             <span v-else>Aktuelle Vorschau generieren</span>
                         </Button>
@@ -225,10 +271,29 @@ const downloadImage = () => {
                             </div>
                         </div>
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
-                             class="max-w-[1052px] w-full h-full object-cover" />
+                            class="max-w-[1052px] w-full h-full object-cover" />
                     </div>
                 </div>
             </div>
+
+            <div
+                class="relative p-4 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border space-y-4">
+                <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
+                    Export/Import Post
+                </h1>
+                <div class="justify-center flex flex-col items-center w-full">
+                    <!--<Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>-->
+                    <div class="w-full flex gap-4">
+                        <Button @click.prevent="postExport" type="button" variant="default" class="mb-4 flex-1">
+                            Export
+                        </Button>
+                        <Button @click.prevent="postImport" type="button" variant="default" class="mb-4 flex-1">
+                            Import
+                        </Button>
+                    </div>
+                </div>
+            </div>
+
             <div
                 class="relative p-4 overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border space-y-4">
                 <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
@@ -271,13 +336,14 @@ const downloadImage = () => {
                 </h2>
                 <div>
                     Das Projekt ist Open Source und du kannst dir den Code auf <a
-                    href="https://github.com/Tschucki/pr0texter" target="_blank">GitHub</a> ansehen.<br><br>
+                        href="https://github.com/Tschucki/pr0texter" target="_blank">GitHub</a> ansehen.<br><br>
                     Den Editor, den du hier siehst, ist ein <a href="https://tiptap.dev/"
-                                                               target="_blank">TipTap-Editor</a>, mit einigen
+                        target="_blank">TipTap-Editor</a>, mit einigen
                     pr0gramm-spezifischen Extensions.
                     Der Editor generiert den Post als HTML, das dann an den Server gesendet wird.<br>
                     Auf dem Server wird dann das HTML in das vorgesehene Template geladen und <a
-                    href="https://pptr.dev/" target="_blank">Puppeteer</a> macht einen Screenshot und der Server sendet
+                        href="https://pptr.dev/" target="_blank">Puppeteer</a> macht einen Screenshot und der Server
+                    sendet
                     das Bild zurück.
                 </div>
             </div>
@@ -296,6 +362,7 @@ const downloadImage = () => {
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }
