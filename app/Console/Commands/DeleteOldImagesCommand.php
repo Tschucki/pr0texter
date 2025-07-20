@@ -18,7 +18,7 @@ class DeleteOldImagesCommand extends Command
 
         $disk = Storage::disk('local');
         $files = $disk->files('public/images');
-        $threshold = Carbon::now()->subHours(3);
+        $threshold = Carbon::now()->subHours(48);
         $count = 0;
 
         foreach ($files as $file) {
