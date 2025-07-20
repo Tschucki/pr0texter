@@ -35,9 +35,7 @@ class PreviewController extends Controller
                 ->setOption('args', [
                     '--disable-web-security',
                     '--waitForFonts',
-                    '--disable-dev-shm-usage',
-                    '--font-render-hinting=none',
-                    '--run-all-compositor-stages-before-draw'
+                    '--disable-dev-shm-usage'
                 ])
                 ->waitUntilNetworkIdle()
                 ->disableJavascript()
