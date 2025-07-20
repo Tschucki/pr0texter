@@ -30,9 +30,13 @@ class PreviewController extends Controller
                 ->fullPage()
                 ->disableCaptureURLs()
                 ->preventUnsuccessfulResponse()
-                ->delay(500)
+                ->delay(2000)
                 ->hideBrowserHeaderAndFooter()
-                ->setOption('args', ['--disable-web-security', '--waitForFonts'])
+                ->setOption('args', [
+                    '--disable-web-security',
+                    '--waitForFonts',
+                    '--disable-dev-shm-usage'
+                ])
                 ->waitUntilNetworkIdle()
                 ->disableJavascript()
                 ->windowSize(1052, 0)
