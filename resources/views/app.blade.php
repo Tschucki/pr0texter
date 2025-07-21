@@ -8,6 +8,13 @@
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
         <link rel="manifest" href="/site.webmanifest">
 
+        {{-- Inline script to detect system dark mode preference and apply it immediately --}}
+        <script>
+            (function() {
+                document.documentElement.classList.add('dark');
+            })();
+        </script>
+
         {{-- Inline style to set the HTML background color based on our theme in app.css --}}
         <style>
             html {
