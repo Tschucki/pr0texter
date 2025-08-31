@@ -15,6 +15,7 @@ import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import html2canvas from 'html2canvas-pro';
 
 const props = defineProps({
     template: {
@@ -48,7 +49,9 @@ const editorContent = ref('<p>Der neue pr0texter für das pr0gramm</p>');
 const loading = ref(false);
 const previewImage = ref('');
 const fileSize = ref('');
-const autoGeneratePreview = ref(false);
+const autoGeneratePreview = ref(true);
+const useLocalGeneration = ref(true);
+const localPreviewRef = ref(null);
 
 
 const formSchema = toTypedSchema(z.object({
@@ -60,8 +63,15 @@ const form = useForm({
 });
 
 const throttledGetPreview = _.throttle(() => {
+    if (useLocalGeneration.value) {
+        // we need to wait a bit until the dom is updated
+        setTimeout(() => {
+            getPreviewLocal();
+        }, 500);
+        return;
+    }
     getPreview();
-}, 500);
+}, 1000);
 
 const abortController = ref<AbortController | null>(null);
 const resize = ref<boolean>(true);
@@ -71,6 +81,64 @@ const abortPreviousRequest = () => {
         abortController.value.abort();
     }
     abortController.value = new AbortController();
+};
+
+const getPreviewLocal = () => {
+    loading.value = true;
+
+    try {
+        if (localPreviewRef.value) {
+            const estimatedHeight = (localPreviewRef.value as HTMLElement).offsetHeight;
+            html2canvas(localPreviewRef.value, {
+                backgroundColor: '#161618',
+                width: resize.value ? 1052 : undefined,
+                height: estimatedHeight,
+                useCORS: true,
+                allowTaint: true,
+                logging: false,
+            }).then(canvas => {
+                if (resize.value) {
+                    const tmpCanvas = document.createElement('canvas');
+                    tmpCanvas.width = 1052;
+                    tmpCanvas.height = estimatedHeight;
+                    const ctx = tmpCanvas.getContext('2d');
+
+                    if (!ctx) {
+                        throw new Error('Could not get canvas context');
+                    }
+
+                    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, tmpCanvas.width, tmpCanvas.height);
+
+                    canvas = tmpCanvas;
+                }
+
+                canvas.toBlob(async blob => {
+                    if (blob) {
+                        const size = blob.size;
+                        if (size < 1024) {
+                            fileSize.value = `${size} B`;
+                        } else if (size < 1024 * 1024) {
+                            fileSize.value = `${(size / 1024).toFixed(2)} KB`;
+                        } else {
+                            fileSize.value = `${(size / (1024 * 1024)).toFixed(2)} MB`;
+                        }
+
+                        URL.revokeObjectURL(previewImage.value);
+
+                        previewImage.value = URL.createObjectURL(blob);
+                    }
+                    loading.value = false;
+                }, 'image/png', 1);
+            }).catch(error => {
+                console.log('error while generating canvas', error);
+                loading.value = false;
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        loading.value = false;
+
+    }
 };
 
 const getPreview = () => {
@@ -119,7 +187,7 @@ const getPreview = () => {
 const storageKey = ref(`editor_content_${props.template.slug}`);
 
 watch(form.values, () => {
-    if(autoGeneratePreview.value === false) {
+    if (autoGeneratePreview.value === false) {
         return;
     }
     throttledGetPreview();
@@ -127,7 +195,7 @@ watch(form.values, () => {
 
 watch(editorContent, (newContent) => {
     localStorage.setItem(storageKey.value, newContent);
-    if(autoGeneratePreview.value === false) {
+    if (autoGeneratePreview.value === false) {
         return;
     }
     throttledGetPreview();
@@ -138,7 +206,6 @@ watch(resize, () => {
 });
 
 onMounted(() => {
-    throttledGetPreview();
     const savedContent = localStorage.getItem(storageKey.value);
     if (savedContent) {
         editorContent.value = savedContent;
@@ -167,7 +234,7 @@ const downloadImage = () => {
 
 <template>
     <Head>
-        <title>Post erstellen - Template {{usePage().props.template.title}}</title>
+        <title>Post erstellen - Template {{props.template.title}}</title>
     </Head>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
@@ -191,24 +258,47 @@ const downloadImage = () => {
                     Vorschau
                 </h1>
                 <div class="justify-center flex flex-col items-center">
-                    <Button v-if="!loading" @click.prevent="downloadImage" :disabled="loading" type="button" variant="default"
-                            class="mb-4 w-full max-w-[1052px]">
+                    <div class="w-full items-center flex justify-between gap-4 max-w-[1052px]">
+                        <div class="flex items-center gap-2">
+                            <Label for="local-generation">Lokal generieren</Label>
+                            <Switch id="local-generation" v-model="useLocalGeneration" @change="throttledGetPreview" />
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <Label for="resize">Vorschau automatisch generieren</Label>
+                            <Switch id="resize" v-model="autoGeneratePreview" />
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <Label for="resize">Maximale Breite 1052px</Label>
+                            <Switch id="resize" v-model="resize" />
+                        </div>
+                    </div>
+
+                    <Button @click.prevent="throttledGetPreview" type="button"
+                            variant="default"
+                            class="my-4 w-full max-w-[1052px]">
+                        <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
+                        <span v-else>Aktuelle Vorschau generieren</span>
+                    </Button>
+
+                    <Button v-if="!loading" @click.prevent="downloadImage" :disabled="loading" type="button"
+                            variant="default"
+                            class="my-4 w-full max-w-[1052px]">
                         <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
                         <span v-else>Bild herunterladen</span>
                     </Button>
-                    <div v-if="!loading" class="w-full items-center flex justify-between gap-4 max-w-[1052px]">
-                        <Button @click.prevent="throttledGetPreview" type="button"
-                                variant="default"
-                                class="mb-4 w-1/2">
-                            <Loader2 v-if="loading" class="animate-spin text-4xl aspect-square"></Loader2>
-                            <span v-else>Aktuelle Vorschau generieren</span>
-                        </Button>
-                        <div class="text-sm text-gray-500 mb-2 flex justify-between flex-wrap">
-                            <div class="flex items-center gap-2">
-                                <Label for="resize">Vorschau automatisch generieren</Label>
-                                <Switch id="resize" v-model="autoGeneratePreview" />
-                            </div>
-                        </div>
+
+                    <div v-if="useLocalGeneration" ref="localPreviewRef"
+                         class="!absolute -left-[99999px] antialiased bg-[#161618] prose dark:prose-invert py-4 px-2
+            text-[#f2f5f4] ProseMirror !prose-2xl !leading-tight prose-invert-[hsl(--border)]
+            prose-p:text-2xl prose-p:leading-tight prose-h1:text-6xl prose-h2:text-5xl prose-h3:text-4xl
+            prose-headings:font-bold prose-headings:text-[hsl(--border)] prose-p:text-[hsl(--border)]
+            prose-a:text-[hsl(--border)] prose-a:opacity-90 prose-a:hover:opacity-100
+            prose-a:underline-offset-4 prose-strong:text-[hsl(--border)]
+            prose-em:text-[hsl(--border)]/90 prose-code:text-[hsl(--border)]
+            prose-code:bg-white/10 prose-code:rounded-md prose-code:px-1.5 prose-code:py-0.5
+            prose-blockquote:text-[hsl(--border)]/80 prose-blockquote:border-l-[hsl(--border)]/30
+            prose-hr:border-[hsl(--border)]/20 prose-img:rounded-2xl max-w-[1052px] w-full"
+                         v-html="editorContent">
                     </div>
                     <div v-if="loading" class="h-[30dvh] flex items-center justify-center gap-4 flex-col">
                         <Loader2 class="animate-spin text-4xl aspect-square"></Loader2>
@@ -219,10 +309,6 @@ const downloadImage = () => {
                     <div v-else>
                         <div v-if="fileSize" class="text-sm text-gray-500 mb-2 flex justify-between flex-wrap">
                             Bildgröße: {{ fileSize }} (Max: 20MB für pr0gramm)
-                            <div class="flex items-center gap-2">
-                                <Label for="resize">Maximale Breite 1052px</Label>
-                                <Switch id="resize" v-model="resize" />
-                            </div>
                         </div>
                         <img v-if="previewImage" :src="previewImage" alt="Preview"
                              class="max-w-[1052px] w-full h-full object-cover" />
