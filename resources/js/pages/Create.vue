@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import html2canvas from 'html2canvas-pro';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const props = defineProps({
     template: {
@@ -95,7 +96,7 @@ const getPreviewLocal = () => {
                 height: estimatedHeight,
                 useCORS: true,
                 allowTaint: true,
-                logging: false,
+                logging: false
             }).then(canvas => {
                 if (resize.value) {
                     const tmpCanvas = document.createElement('canvas');
@@ -212,7 +213,7 @@ onMounted(() => {
     if (savedContent) {
         editorContent.value = savedContent;
     }
-    if ('mounted getPreview');
+    if ('mounted getPreview') ;
     throttledGetPreview();
 });
 
@@ -246,6 +247,20 @@ const downloadImage = () => {
                 <h1 class="scroll-m-20 text-2xl font-semibold tracking-tight">
                     Post erstellen
                 </h1>
+                <div class="flex justify-center">
+                    <Alert class="max-w-[1052px] w-full">
+                        <AlertTitle>
+                            Lokale Bildgenerierung!
+                        </AlertTitle>
+                        <AlertDescription>
+                            Bilder werden jetzt automatisch lokal im Browser generiert. Dies ist schneller und schont
+                            den
+                            Server, kann aber zu Qualitätsverlusten führen. Du kannst jederzeit wieder auf die
+                            serverseitige
+                            Bildgenerierung umschalten, indem du den Schalter "Lokal generieren" deaktivierst.
+                        </AlertDescription>
+                    </Alert>
+                </div>
                 <FormField name="content" class="">
                     <FormItem class="flex justify-center">
                         <FormControl class="max-w-[1052px] w-full h-full">
