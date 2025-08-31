@@ -62,7 +62,7 @@ const form = useForm({
     validationSchema: formSchema
 });
 
-const throttledGetPreview = _.throttle(() => {
+const throttledGetPreview = _.debounce(() => {
     if (useLocalGeneration.value) {
         // we need to wait a bit until the dom is updated
         setTimeout(() => {
@@ -71,7 +71,7 @@ const throttledGetPreview = _.throttle(() => {
         return;
     }
     getPreview();
-}, 1000);
+}, 500);
 
 const abortController = ref<AbortController | null>(null);
 const resize = ref<boolean>(true);
@@ -190,6 +190,7 @@ watch(form.values, () => {
     if (autoGeneratePreview.value === false) {
         return;
     }
+    console.log('form changed, generating preview');
     throttledGetPreview();
 });
 
@@ -198,6 +199,7 @@ watch(editorContent, (newContent) => {
     if (autoGeneratePreview.value === false) {
         return;
     }
+    console.log('editor content changed, generating preview');
     throttledGetPreview();
 });
 
@@ -210,6 +212,7 @@ onMounted(() => {
     if (savedContent) {
         editorContent.value = savedContent;
     }
+    if ('mounted getPreview');
     throttledGetPreview();
 });
 
